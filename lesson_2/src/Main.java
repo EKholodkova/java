@@ -8,7 +8,8 @@ public class Main {
         doubleValue();
         System.out.println();
         fillTable();
-
+        System.out.println();
+        findMinMax();
     }
 
     public static void changeValue() {
@@ -59,6 +60,35 @@ public class Main {
                 System.out.print(arr[i][j]);
             }
             System.out.println();
+        }
+    }
+
+    public static void findMinMax() {
+        int[] arr = {666, 5, 3, 2, 11, 4, 5, 2, 4, 8, 9, 1};
+        int minimum = arr[0];
+        int maximum = arr[0];
+        for(int i = 0; i < arr.length; i++){
+            //System.out.println(minimum + " " + arr[i]);
+            minimum = min(minimum, arr[i]);
+            maximum = max(maximum, arr[i]);
+        }
+        System.out.println("Минимальное значение - " + minimum);
+        System.out.println("Максимальное значение - " + maximum);
+    }
+
+    public static int min(int a, int b) {
+        if(a < b) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
+    public static int max(int a, int b) {
+        if(a > b) {
+            return a;
+        } else {
+            return b;
         }
     }
 

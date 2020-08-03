@@ -15,12 +15,12 @@ public class Main {
         for(int i = 0; i < arr.length; i++) {
             arr[i] = 1;
         }
-//        System.out.println(Arrays.toString(arr));
+
         long start = System.currentTimeMillis();
         for(int i = 0; i < arr.length; i++) {
             arr[i] = (float)(arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
         }
-//        System.out.println(Arrays.toString(arr));
+
         long fin = System.currentTimeMillis();
         System.out.println(fin - start);
     }
@@ -30,7 +30,7 @@ public class Main {
         for(int i = 0; i < arr.length; i++) {
             arr[i] = 1;
         }
-//        System.out.println(Arrays.toString(arr));
+
         long start = System.currentTimeMillis();
         float[]arr1 = new float[h];
         float[]arr2 = new float[h];
@@ -41,15 +41,12 @@ public class Main {
         t1.start();
         t2.start();
 
-
         try{
             t1.join();
             t2.join();
 
-
             System.arraycopy(arr1, 0, arr, 0, h);
             System.arraycopy(arr2, 0, arr, h, h);
-//            System.out.println(Arrays.toString(arr));
 
             long fin = System.currentTimeMillis();
             System.out.println(fin - start);
@@ -59,11 +56,6 @@ public class Main {
             e.printStackTrace();
         }
 
-
-
- /*       for(int i = 0; i < arr.length; i++) {
-            arr[i] = (float)(arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
-        }*/
 
     }
 }

@@ -11,10 +11,10 @@ public class DialogueApp {
         Pair<String, String> logPass = getData();
         System.out.println(logPass.login);
         System.out.println(logPass.password);
-//        usersDB.printData();
         System.out.println(usersDB.findData(logPass));
         doAuth(logPass);
         changeName(logPass);
+        usersDB.close();
     }
 
 

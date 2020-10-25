@@ -83,4 +83,14 @@ public class UsersDB {
             }
         }
     }
+
+    public void close() {
+        try {
+            resultSet.close();
+            statement.close();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 }

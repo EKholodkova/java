@@ -4,8 +4,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientHandler {
+    private static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
     private Server server;
     private Socket socket;
     private DataInputStream in;
@@ -26,7 +29,7 @@ public class ClientHandler {
                         doAuth();
                         readMessage();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.log(Level.WARNING, e.getMessage(), e);
                     } finally {
                         closeConnection();
                     }
@@ -36,6 +39,7 @@ public class ClientHandler {
                     .start();
 
         } catch(IOException e) {
+            logger.log(Level.SEVERE, "Client handler was not created", e);
             throw new RuntimeException("Client handler was not created");
         }
     }
@@ -46,7 +50,7 @@ public class ClientHandler {
 
     public void doAuth() throws IOException {
         while (true) {
-            System.out.println("Waiting for auth...");
+            logger.log(Level.INFO, "Waiting for auth...");
             String message = in.readUTF();
             if(message.startsWith("/auth")) {
                 String[] credentials = message.split("\\s");
@@ -56,13 +60,15 @@ public class ClientHandler {
                         record = possibleRecord;
                         sendMessage("/authok " + record.getName());
                         server.broadcastMessage("Logged in " + record.getName());
-                        System.out.println(record.getName() + " authorized");
+                        logger.log(Level.INFO, record.getName() + " authorized");
                         server.subscribe(this);
                         break;
                     } else {
+                        logger.log(Level.INFO, String.format("Current record [%s] is already occupied", possibleRecord.getName()));
                         sendMessage(String.format("Current record [%s] is already occupied", possibleRecord.getName()));
                     }
                 } else {
+                    logger.log(Level.INFO, "Record is not found for " + message);
                     sendMessage("Record is not found");
                 }
             }
@@ -73,13 +79,13 @@ public class ClientHandler {
         try {
             out.writeUTF(message);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "Something went wrong...", e);
         }
     }
     public void readMessage() throws IOException {
         while(true) {
             String message = in.readUTF();
-            System.out.println(String.format("Incoming message from %s: %s", record.getName(), message));
+            logger.log(Level.INFO, String.format("Incoming message from %s: %s", record.getName(), message));
             if(message.equals("/end")) {
                 return;
             }
@@ -88,21 +94,22 @@ public class ClientHandler {
     }
     public void closeConnection() {
         server.unsubscribe(this);
+        logger.log(Level.INFO, record.getName() + " left chat");
         server.broadcastMessage(record.getName() + " left chat");
         try {
             in.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "DataInputStream closing failed", e);
         }
         try {
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "DataOutputStream closing failed", e);
         }
         try {
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "Socket closing failed", e);
         }
     }
 

@@ -3,8 +3,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
+    private static final Logger logger = Logger.getLogger(Server.class.getName());
     public static final int PORT = 8882;
     private AuthService authService;
     private Set<ClientHandler> clientHandlers;  //список уже вошедших в систему пользователей
@@ -12,17 +15,17 @@ public class Server {
     public Server() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)){
             authService = new BasicAuthService();
-            System.out.println("Auth is started up");
+            logger.log(Level.INFO, "Auth is started up");
             clientHandlers = new HashSet<>();
 
             while (true) {
-                System.out.println("Waiting for connection...");
+                logger.log(Level.INFO, "Waiting for connection...");
                 Socket socket = serverSocket.accept();
-                System.out.println("Client connected: " + socket);
+                logger.log(Level.INFO, "Client connected: " + socket);
                 new ClientHandler(this, socket);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Server error", e);
         }
     }
 
